@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Página con Parallax Variado y Código - PWA</title>
+  
+  <!-- Manifest para PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#1abc9c" />
+  
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+      font-family: Arial, sans-serif;
+      background: #222;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.7);
+      text-align: center;
+      z-index: 10;
+      padding: 10px;
+    }
+    nav a {
+      color: #eee;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      font-family: monospace;
+    }
+
+    section {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 2em;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: background-color 1s ease;
+      padding: 20px;
+    }
+
+    /* Texto explicativo pequeño */
+    .explanation {
+      font-size: 0.6em;
+      color: rgba(255, 255, 255, 0.8);
+      max-width: 700px;
+      margin-top: 12px;
+      line-height: 1.3em;
+      font-family: 'Courier New', Courier, monospace;
+      background: rgba(0,0,0,0.3);
+      padding: 10px;
+      border-radius: 8px;
+      user-select: text;
+    }
+
+    pre {
+      text-align: left;
+      overflow-x: auto;
+      margin: 8px 0 0 0;
+      font-size: 0.6em;
+      line-height: 1.2em;
+      background: #111;
+      border-radius: 6px;
+      padding: 10px;
+      max-width: 700px;
+      user-select: text;
+    }
+    code {
+      white-space: pre-wrap;
+    }
+
+    /* Fondo inicial estático */
+    #inicio {
+      background-color: hsl(160, 90%, 40%);
+    }
+
+    #galeria { background: #34495e; }
+
+    /* Carrusel */
+    .carousel {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .carousel img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1s ease;
+      pointer-events: none;
+    }
+    .carousel img.active {
+      opacity: 1;
+    }
+
+    /* Parallax básico */
+    #parallax1 {
+      background-image: url('https://picsum.photos/id/1018/1200/800');
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Parallax dinámico */
+    #parallax2 {
+      background-image: url('https://picsum.photos/id/1039/1200/800');
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Parallax con zoom */
+    #parallax3 img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      object-fit: cover;
+      transform: scale(1);
+      transform-origin: top center;
+      transition: transform 0.1s linear;
+      z-index: 0;
+    }
+    #parallax3 .content {
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#inicio">Inicio</a>
+    <a href="#galeria">Galería</a>
+    <a href="#parallax1">Parallax 1</a>
+    <a href="#parallax2">Parallax 2</a>
+    <a href="#parallax3">Parallax 3</a>
+  </nav>
+
+  <section id="inicio">
+    Bienvenido<br />Sección 1
+    <div class="explanation">
+      Fondo cambia de color solo mientras haces scroll, usando JavaScript para detectar el evento scroll y CSS para la transición suave.
+      <pre><code>
+// JS para cambiar color solo con scroll
+const inicio = document.getElementById('inicio');
+let scrollTimeout;
+
+window.addEventListener('scroll', () => {
+  const hue = Math.floor(Math.random() * 70) + 150;
+  inicio.style.backgroundColor = `hsl(${hue}, 90%, 45%)`;
+
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(() => {}, 300);
+});
+      </code></pre>
+    </div>
+  </section>
+
+  <section id="galeria">
+    <div class="carousel">
+      <img src="https://picsum.photos/id/1015/1200/800" class="active" />
+      <img src="https://picsum.photos/id/1016/1200/800" />
+      <img src="https://picsum.photos/id/1019/1200/800" />
+    </div>
+    <div class="explanation" style="position: relative; z-index:1;">
+      Carrusel de imágenes que cambia según la posición del scroll dentro de esta sección. JavaScript controla la visibilidad y transición suave con CSS.
+      <pre><code>
+// JS carrusel controlado por scroll
+const images = document.querySelectorAll(".carousel img");
+let lastIndex = 0;
+
+window.addEventListener("scroll", () => {
+  const galeria = document.querySelector("#galeria");
+  const rect = galeria.getBoundingClientRect();
+
+  if (rect.top < window.innerHeight && rect.bottom > 0) {
+    const index = Math.floor(((window.innerHeight - rect.top) / rect.height) * images.length);
+    if (index !== lastIndex) {
+      images[lastIndex].classList.remove("active");
+      images[index % images.length].classList.add("active");
+      lastIndex = index % images.length;
+    }
+  }
+});
+      </code></pre>
+    </div>
+  </section>
+
+  <section id="parallax1">
+    Parallax básico<br />Sección 3
+    <div class="explanation">
+      Efecto parallax básico con fondo fijo usando solo CSS: <code>background-attachment: fixed;</code>.
+      <pre><code>
+#parallax1 {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+      </code></pre>
+    </div>
+  </section>
+
+  <section id="parallax2">
+    Parallax dinámico<br />Sección 4
+    <div class="explanation">
+      Fondo que se mueve verticalmente según scroll, con JavaScript ajustando <code>background-position</code> para efecto dinámico.
+      <pre><code>
+// JS parallax dinámico
+window.addEventListener("scroll", () => {
+  const sec = document.querySelector("#parallax2");
+  const rect = sec.getBoundingClientRect();
+  if (rect.top < window.innerHeight && rect.bottom > 0) {
+    const yPos = (rect.top / window.innerHeight) * 50;
+    sec.style.backgroundPosition = `center ${yPos}%`;
+  }
+});
+      </code></pre>
+    </div>
+  </section>
+
+  <section id="parallax3">
+    <img src="https://picsum.photos/id/1025/1200/800" />
+    <div class="content">
+      Parallax con zoom<br />Sección 5
+      <div class="explanation" style="font-size:0.5em; margin-top:8px; color:rgba(255,255,255,0.9); max-width:none;">
+        Imagen con efecto zoom hacia arriba controlado por scroll usando JavaScript para cambiar <code>transform: scale()</code> con <code>transform-origin: top center</code>.
+        <pre><code>
+// JS parallax con zoom
+window.addEventListener("scroll", () => {
+  const sec = document.querySelector("#parallax3");
+  const img = sec.querySelector("img");
+  const rect = sec.getBoundingClientRect();
+  if (rect.top < window.innerHeight && rect.bottom > 0) {
+    const progress = 1 + ((window.innerHeight - rect.top) / rect.height) * 0.8;
+    img.style.transform = `scale(${progress})`;
+  }
+});
+        </code></pre>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Código para cambio de color en #inicio solo cuando se hace scroll
+    const inicio = document.getElementById('inicio');
+    let colorTimeout = null;
+
+    window.addEventListener('scroll', () => {
+      // Cambiar color
+      const hue = Math.floor(Math.random() * 70) + 150;
+      inicio.style.backgroundColor = `hsl(${hue}, 90%, 45%)`;
+
+      // Limpiar timeout anterior
+      if(colorTimeout !== null) clearTimeout(colorTimeout);
+
+      // Timeout para "pausar" cuando el usuario deja de hacer scroll
+      colorTimeout = setTimeout(() => {
+        colorTimeout = null;
+      }, 300);
+    });
+
+    // Carrusel controlado por scroll
+    const images = document.querySelectorAll(".carousel img");
+    let lastIndex = 0;
+    let carouselTimeout;
+
+    window.addEventListener("scroll", () => {
+      clearTimeout(carouselTimeout);
+      carouselTimeout = setTimeout(() => {
+        const galeria = document.querySelector("#galeria");
+        const rect = galeria.getBoundingClientRect();
+
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          const index = Math.floor(
+            ((window.innerHeight - rect.top) / rect.height) * images.length
+          );
+
+          if (index !== lastIndex) {
+            images[lastIndex].classList.remove("active");
+            images[index % images.length].classList.add("active");
+            lastIndex = index % images.length;
+          }
+        }
+      }, 50);
+    });
+
+    // Parallax dinámico
+    window.addEventListener("scroll", () => {
+      const sec = document.querySelector("#parallax2");
+      const rect = sec.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        const yPos = (rect.top / window.innerHeight) * 50;
+        sec.style.backgroundPosition = `center ${yPos}%`;
+      }
+    });
+
+    // Parallax con zoom
+    window.addEventListener("scroll", () => {
+      const sec = document.querySelector("#parallax3");
+      const img = sec.querySelector("img");
+      const rect = sec.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        const progress = 1 + ((window.innerHeight - rect.top) / rect.height) * 0.8;
+        img.style.transform = `scale(${progress})`;
+      }
+    });
+
+    // Registrar service worker para PWA
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js")
+          .then(reg => console.log("Service Worker registrado:", reg))
+          .catch(err => console.log("Error registrando SW:", err));
+      });
+    }
+  </script>
+</body>
+</html>
