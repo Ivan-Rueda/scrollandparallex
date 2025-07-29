@@ -159,11 +159,12 @@ const inicio = document.getElementById('inicio');
 let scrollTimeout;
 
 window.addEventListener('scroll', () => {
-  const hue = Math.floor(Math.random() * 70) + 150;
-  inicio.style.backgroundColor = `hsl(${hue}, 90%, 45%)`;
+        const hues = [0, 30, 60, 120, 180, 240, 270]; // rojo, naranja, amarillo, verde, cyan, azul, violeta
+        const hue = hues[Math.floor(Math.random() * hues.length)];
+        const color = `hsl(${hue}, 90%, 45%)`;
 
   clearTimeout(scrollTimeout);
-  scrollTimeout = setTimeout(() => {}, 300);
+  scrollTimeout = setTimeout(() => {}, 200);
 });
       </code></pre>
     </div>
