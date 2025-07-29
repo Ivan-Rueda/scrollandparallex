@@ -29,8 +29,11 @@ Es una **página web de una sola presentación** que combina:
 
 /
 ├── index.html # Página principal con efectos y scripts
+
 ├── manifest.json # Archivo para configuración PWA
+
 ├── service-worker.js # Control de cache y offline
+
 └── README.md # Este archivo
 
 
