@@ -74,6 +74,7 @@ Puedes cambiar fácilmente:
 
 ## ⭐ ¡Gracias por visitar!
 
-¡Explora el código y crea tu propia experiencia web única!
+¡Explora el código y crea tu propia experiencia web!
+https://ivan-rueda.github.io/scrollandparallex/
 
 ---
